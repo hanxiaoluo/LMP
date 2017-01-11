@@ -94,11 +94,34 @@ Window {
 
     PlayPanel {
         id: playPanel
-        anchors.top: parent.top; anchors.left: parent.left; anchors.right: playList.left; anchors.bottom: playCtrl.top
-
+        anchors.top: parent.top; anchors.left: parent.left; anchors.right: playList.left; anchors.bottom: parent.bottom //playCtrl.top
+        anchors.bottomMargin: 60
         MouseArea {
+            id: mouse
             anchors.fill: parent
             onClicked: onCtrl(1)
+            onDoubleClicked: {
+                if (playList.width == 216) {
+                    playList.width = 0;
+                    playCtrl.visible = false;
+                    playPanel.anchors.bottomMargin = 0;
+                    showFullScreen();
+                    hoverEnabled = true;
+                }
+                else {
+                    playList.width = 216;
+                    playPanel.anchors.bottomMargin = 60;
+                    playCtrl.visible = true;
+                    hoverEnabled = false;
+                    showNormal();
+                }
+            }
+
+            onPositionChanged: {
+                console.log(mouse.y)
+                if (playPanel.anchors.bottomMargin == 0)
+                    playCtrl.visible = mouse.y > playPanel.height - 60;
+            }
         }
     }
 
